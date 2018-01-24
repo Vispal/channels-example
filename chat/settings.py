@@ -58,6 +58,22 @@ DATABASES = {
     'default': dj_database_url.config(default="postgres:///channels-example", conn_max_age=500)
 }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'channels',
+        'USER': 'jussi',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+# Update database configuration with $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
 AUTH_PASSWORD_VALIDATORS = (
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -83,9 +99,7 @@ USE_TZ = True
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 WSGI_APPLICATION = 'chat.wsgi.application'
-
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
@@ -108,28 +122,5 @@ CHANNEL_LAYERS = {
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
         "ROUTING": "chat.routing.channel_routing",
-    },
-}
-
-# Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'propagate': True,
-            'level': 'INFO'
-        },
-        'chat': {
-            'handlers': ['console'],
-            'propagate': False,
-            'level': 'DEBUG',
-        },
     },
 }
